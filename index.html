@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <title>溝通助手</title>
+    <style>
+        body {
+            font-family: Arial;
+            background-color: lightgray;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 50px;
+            color: black;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        #home-page, #word-page, #sentence-page {
+            display: none;
+        }
+        #home-page.active, #word-page.active, #sentence-page.active {
+            display: block;
+        }
+        #home-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .home-button {
+            font-size: 40px;
+            padding: 20px;
+            background-color: white;
+            border: 2px solid gray;
+            cursor: pointer;
+            outline: none;
+            text-align: center;
+            width: 200px;
+        }
+        .home-button.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+        #sentence-box {
+            font-size: 40px;
+            background-color: white;
+            border: 2px solid gray;
+            padding: 10px;
+            margin: 0 auto 10px;
+            width: 90%;
+            min-height: 60px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        #container {
+            display: flex;
+            width: 90%;
+            margin: 0 auto;
+            height: calc(100vh - 200px);
+        }
+        #word-area, #sentence-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        #right-buttons {
+            width: 150px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 120px;
+        }
+        .button {
+            font-size: 30px;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border: 2px solid gray;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+        }
+        .button.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+        .category {
+            margin: 20px 0;
+        }
+        .category-title {
+            font-size: 35px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .word-grid, .sentence-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+        .word, .sentence {
+            font-size: 30px;
+            padding: 10px;
+            background-color: white;
+            border: 2px solid gray;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+        }
+        .word.selected, .sentence.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>溝通助手</h1>
+    <div id="home-page" class="active">
+        <div id="home-buttons">
+            <div class="home-button" data-page="word" tabindex="0">單字</div>
+            <div class="home-button" data-page="sentence" tabindex="0">句子</div>
+        </div>
+    </div>
+    <div id="word-page">
+        <div id="sentence-box"></div>
+        <div id="container">
+            <div id="word-area">
+                <div class="category">
+                    <div class="category-title">常用動詞</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="想" tabindex="0">想</div>
+                        <div class="word" data-word="請" tabindex="0">請</div>
+                        <div class="word" data-word="幫忙" tabindex="0">幫忙</div>
+                        <div class="word" data-word="調較" tabindex="0">調較</div>
+                        <div class="word" data-word="要" tabindex="0">要</div>
+                        <div class="word" data-word="唔" tabindex="0">唔</div>
+                        <div class="word" data-word="快" tabindex="0">快</div>
+                        <div class="word" data-word="慢" tabindex="0">慢</div>
+                        <div class="word" data-word="喺" tabindex="0">喺</div>
+                        <div class="word" data-word="去" tabindex="0">去</div>
+                        <div class="word" data-word="來" tabindex="0">來</div>
+                        <div class="word" data-word="睇" tabindex="0">睇</div>
+                        <div class="word" data-word="聽" tabindex="0">聽</div>
+                        <div class="word" data-word="話" tabindex="0">話</div>
+                        <div class="word" data-word="寫" tabindex="0">寫</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">主體</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="我" tabindex="0">我</div>
+                        <div class="word" data-word="你" tabindex="0">你</div>
+                        <div class="word" data-word="佢" tabindex="0">佢</div>
+                        <div class="word" data-word="他" tabindex="0">他</div>
+                        <div class="word" data-word="她" tabindex="0">她</div>
+                        <div class="word" data-word="它" tabindex="0">它</div>
+                        <div class="word" data-word="我哋" tabindex="0">我哋</div>
+                        <div class="word" data-word="你哋" tabindex="0">你哋</div>
+                        <div class="word" data-word="佢哋" tabindex="0">佢哋</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">助語詞</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="好" tabindex="0">好</div>
+                        <div class="word" data-word="太" tabindex="0">太</div>
+                        <div class="word" data-word="好多" tabindex="0">好多</div>
+                        <div class="word" data-word="少少" tabindex="0">少少</div>
+                        <div class="word" data-word="仲" tabindex="0">仲</div>
+                        <div class="word" data-word="已經" tabindex="0">已經</div>
+                        <div class="word" data-word="唔係" tabindex="0">唔係</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">床位調整</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="床" tabindex="0">床</div>
+                        <div class="word" data-word="高" tabindex="0">高</div>
+                        <div class="word" data-word="低" tabindex="0">低</div>
+                        <div class="word" data-word="坐" tabindex="0">坐</div>
+                        <div class="word" data-word="攤" tabindex="0">攤</div>
+                        <div class="word" data-word="斜" tabindex="0">斜</div>
+                        <div class="word" data-word="平" tabindex="0">平</div>
+                        <div class="word" data-word="床頭" tabindex="0">床頭</div>
+                        <div class="word" data-word="床尾" tabindex="0">床尾</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">身體部位</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="頭" tabindex="0">頭</div>
+                        <div class="word" data-word="眼" tabindex="0">眼</div>
+                        <div class="word" data-word="口" tabindex="0">口</div>
+                        <div class="word" data-word="耳" tabindex="0">耳</div>
+                        <div class="word" data-word="手" tabindex="0">手</div>
+                        <div class="word" data-word="身" tabindex="0">身</div>
+                        <div class="word" data-word="腰" tabindex="0">腰</div>
+                        <div class="word" data-word="腳" tabindex="0">腳</div>
+                        <div class="word" data-word="頸" tabindex="0">頸</div>
+                        <div class="word" data-word="背" tabindex="0">背</div>
+                        <div class="word" data-word="喉" tabindex="0">喉</div>
+                        <div class="word" data-word="胃" tabindex="0">胃</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">感覺</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="冷" tabindex="0">冷</div>
+                        <div class="word" data-word="熱" tabindex="0">熱</div>
+                        <div class="word" data-word="唔舒服" tabindex="0">唔舒服</div>
+                        <div class="word" data-word="舒服" tabindex="0">舒服</div>
+                        <div class="word" data-word="痛" tabindex="0">痛</div>
+                        <div class="word" data-word="腫" tabindex="0">腫</div>
+                        <div class="word" data-word="硬" tabindex="0">硬</div>
+                        <div class="word" data-word="乾" tabindex="0">乾</div>
+                        <div class="word" data-word="痕" tabindex="0">痕</div>
+                        <div class="word" data-word="焗" tabindex="0">焗</div>
+                        <div class="word" data-word="暈" tabindex="0">暈</div>
+                        <div class="word" data-word="頭痛" tabindex="0">頭痛</div>
+                        <div class="word" data-word="眼乾" tabindex="0">眼乾</div>
+                        <div class="word" data-word="喉乾" tabindex="0">喉乾</div>
+                        <div class="word" data-word="口乾" tabindex="0">口乾</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">基本需求</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="水" tabindex="0">水</div>
+                        <div class="word" data-word="湯" tabindex="0">湯</div>
+                        <div class="word" data-word="流質" tabindex="0">流質</div>
+                        <div class="word" data-word="肚餓" tabindex="0">肚餓</div>
+                        <div class="word" data-word="暖" tabindex="0">暖</div>
+                        <div class="word" data-word="凍" tabindex="0">凍</div>
+                        <div class="word" data-word="口" tabindex="0">口</div>
+                        <div class="word" data-word="抹" tabindex="0">抹</div>
+                        <div class="word" data-word="餵" tabindex="0">餵</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">個人護理</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="廁所" tabindex="0">廁所</div>
+                        <div class="word" data-word="尿片" tabindex="0">尿片</div>
+                        <div class="word" data-word="洗澡" tabindex="0">洗澡</div>
+                        <div class="word" data-word="衫" tabindex="0">衫</div>
+                        <div class="word" data-word="擦身" tabindex="0">擦身</div>
+                        <div class="word" data-word="轉身" tabindex="0">轉身</div>
+                        <div class="word" data-word="頭髮" tabindex="0">頭髮</div>
+                        <div class="word" data-word="潤唇膏" tabindex="0">潤唇膏</div>
+                        <div class="word" data-word="吸痰" tabindex="0">吸痰</div>
+                        <div class="word" data-word="喉管" tabindex="0">喉管</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">環境調整</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="冷氣" tabindex="0">冷氣</div>
+                        <div class="word" data-word="風扇" tabindex="0">風扇</div>
+                        <div class="word" data-word="被" tabindex="0">被</div>
+                        <div class="word" data-word="窗" tabindex="0">窗</div>
+                        <div class="word" data-word="光" tabindex="0">光</div>
+                        <div class="word" data-word="暗" tabindex="0">暗</div>
+                        <div class="word" data-word="靜" tabindex="0">靜</div>
+                        <div class="word" data-word="收音機" tabindex="0">收音機</div>
+                        <div class="word" data-word="簾" tabindex="0">簾</div>
+                        <div class="word" data-word="燈" tabindex="0">燈</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">健康/緊急</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="痛" tabindex="0">痛</div>
+                        <div class="word" data-word="頭" tabindex="0">頭</div>
+                        <div class="word" data-word="肚" tabindex="0">肚</div>
+                        <div class="word" data-word="腳" tabindex="0">腳</div>
+                        <div class="word" data-word="醫生" tabindex="0">醫生</div>
+                        <div class="word" data-word="藥" tabindex="0">藥</div>
+                        <div class="word" data-word="喘氣" tabindex="0">喘氣</div>
+                        <div class="word" data-word="驚" tabindex="0">驚</div>
+                        <div class="word" data-word="喉" tabindex="0">喉</div>
+                        <div class="word" data-word="胃" tabindex="0">胃</div>
+                        <div class="word" data-word="按摩" tabindex="0">按摩</div>
+                        <div class="word" data-word="檢查" tabindex="0">檢查</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">數字</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="一" tabindex="0">一</div>
+                        <div class="word" data-word="二" tabindex="0">二</div>
+                        <div class="word" data-word="三" tabindex="0">三</div>
+                        <div class="word" data-word="四" tabindex="0">四</div>
+                        <div class="word" data-word="五" tabindex="0">五</div>
+                        <div class="word" data-word="六" tabindex="0">六</div>
+                        <div class="word" data-word="七" tabindex="0">七</div>
+                        <div class="word" data-word="八" tabindex="0">八</div>
+                        <div class="word" data-word="九" tabindex="0">九</div>
+                        <div class="word" data-word="十" tabindex="0">十</div>
+                        <div class="word" data-word="百" tabindex="0">百</div>
+                        <div class="word" data-word="千" tabindex="0">千</div>
+                        <div class="word" data-word="萬" tabindex="0">萬</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">時間</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="日" tabindex="0">日</div>
+                        <div class="word" data-word="月" tabindex="0">月</div>
+                        <div class="word" data-word="年" tabindex="0">年</div>
+                        <div class="word" data-word="星期" tabindex="0">星期</div>
+                        <div class="word" data-word="朝早" tabindex="0">朝早</div>
+                        <div class="word" data-word="中午" tabindex="0">中午</div>
+                        <div class="word" data-word="夜晚" tabindex="0">夜晚</div>
+                        <div class="word" data-word="今日" tabindex="0">今日</div>
+                        <div class="word" data-word="聽日" tabindex="0">聽日</div>
+                        <div class="word" data-word="昨日" tabindex="0">昨日</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">問候/感謝</div>
+                    <div class="word-grid">
+                        <div class="word" data-word="你好" tabindex="0">你好</div>
+                        <div class="word" data-word="多謝" tabindex="0">多謝</div>
+                        <div class="word" data-word="開心" tabindex="0">開心</div>
+                        <div class="word" data-word="唔開心" tabindex="0">唔開心</div>
+                        <div class="word" data-word="想你" tabindex="0">想你</div>
+                        <div class="word" data-word="再見" tabindex="0">再見</div>
+                        <div class="word" data-word="辛苦" tabindex="0">辛苦</div>
+                        <div class="word" data-word="乖仔" tabindex="0">乖仔</div>
+                        <div class="word" data-word="乖女" tabindex="0">乖女</div>
+                        <div class="word" data-word="弟" tabindex="0">弟</div>
+                        <div class="word" data-word="姐" tabindex="0">姐</div>
+                        <div class="word" data-word="哥" tabindex="0">哥</div>
+                        <div class="word" data-word="妹" tabindex="0">妹</div>
+                        <div class="word" data-word="家人" tabindex="0">家人</div>
+                    </div>
+                </div>
+            </div>
+            <div id="right-buttons">
+                <div class="button" data-action="top" tabindex="0">回最頂</div>
+                <div class="button" data-action="delete" tabindex="0">刪除</div>
+                <div class="button" data-action="clear" tabindex="0">清空</div>
+                <div class="button" data-action="speak" tabindex="0">朗讀</div>
+                <div class="button" data-action="home" tabindex="0">返回主頁</div>
+            </div>
+        </div>
+    </div>
+    <div id="sentence-page">
+        <div id="sentence-box"></div>
+        <div id="container">
+            <div id="sentence-area">
+                <div class="category">
+                    <div class="category-title">問候/感謝</div>
+                    <div class="sentence-grid">
+                        <div class="sentence" data-sentence="你 好" tabindex="0">你 好</div>
+                        <div class="sentence" data-sentence="多謝 你" tabindex="0">多謝 你</div>
+                        <div class="sentence" data-sentence="我 好 開心" tabindex="0">我 好 開心</div>
+                        <div class="sentence" data-sentence="我 唔 開心" tabindex="0">我 唔 開心</div>
+                        <div class="sentence" data-sentence="我 想 你" tabindex="0">我 想 你</div>
+                        <div class="sentence" data-sentence="再見" tabindex="0">再見</div>
+                        <div class="sentence" data-sentence="請 再 來" tabindex="0">請 再 來</div>
+                        <div class="sentence" data-sentence="你 好 辛苦" tabindex="0">你 好 辛苦</div>
+                        <div class="sentence" data-sentence="好 開心 見 你" tabindex="0">好 開心 見 你</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">床位調整</div>
+                    <div class="sentence-grid">
+                        <div class="sentence" data-sentence="床 高 啲" tabindex="0">床 高 啲</div>
+                        <div class="sentence" data-sentence="床 低 啲" tabindex="0">床 低 啲</div>
+                        <div class="sentence" data-sentence="我 想 坐 直" tabindex="0">我 想 坐 直</div>
+                        <div class="sentence" data-sentence="我 想 攤 平" tabindex="0">我 想 攤 平</div>
+                        <div class="sentence" data-sentence="床 尾 高 啲" tabindex="0">床 尾 高 啲</div>
+                        <div class="sentence" data-sentence="床 尾 低 啲" tabindex="0">床 尾 低 啲</div>
+                        <div class="sentence" data-sentence="幫我 調 床" tabindex="0">幫我 調 床</div>
+                        <div class="sentence" data-sentence="床 斜 啲" tabindex="0">床 斜 啲</div>
+                        <div class="sentence" data-sentence="床 平 啲" tabindex="0">床 平 啲</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">身體狀況/感覺</div>
+                    <div class="sentence-grid">
+                        <div class="sentence" data-sentence="我 好 冷" tabindex="0">我 好 冷</div>
+                        <div class="sentence" data-sentence="我 好 熱" tabindex="0">我 好 熱</div>
+                        <div class="sentence" data-sentence="我 唔 舒服" tabindex="0">我 唔 舒服</div>
+                        <div class="sentence" data-sentence="我 好 攰" tabindex="0">我 好 攰</div>
+                        <div class="sentence" data-sentence="我 好 痕" tabindex="0">我 好 痕</div>
+                        <div class="sentence" data-sentence="我 好 焗" tabindex="0">我 好 焗</div>
+                        <div class="sentence" data-sentence="我 好 暈" tabindex="0">我 好 暈</div>
+                        <div class="sentence" data-sentence="冷氣 吹 頭 痛" tabindex="0">冷氣 吹 頭 痛</div>
+                        <div class="sentence" data-sentence="風扇 吹 眼 乾" tabindex="0">風扇 吹 眼 乾</div>
+                        <div class="sentence" data-sentence="喉嚨 好 乾" tabindex="0">喉嚨 好 乾</div>
+                        <div class="sentence" data-sentence="口 好 乾" tabindex="0">口 好 乾</div>
+                        <div class="sentence" data-sentence="背脊 好 硬" tabindex="0">背脊 好 硬</div>
+                        <div class="sentence" data-sentence="頸 好 硬" tabindex="0">頸 好 硬</div>
+                        <div class="sentence" data-sentence="腳 好 腫" tabindex="0">腳 好 腫</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">基本需求</div>
+                    <div class="sentence-grid">
+                        <div class="sentence" data-sentence="我 想 飲 水" tabindex="0">我 想 飲 水</div>
+                        <div class="sentence" data-sentence="我 想 飲 湯" tabindex="0">我 想 飲 湯</div>
+                        <div class="sentence" data-sentence="我 想 飲 流質" tabindex="0">我 想 飲 流質</div>
+                        <div class="sentence" data-sentence="我 好 肚餓" tabindex="0">我 好 肚餓</div>
+                        <div class="sentence" data-sentence="幫我 餵 流質" tabindex="0">幫我 餵 流質</div>
+                        <div class="sentence" data-sentence="我 唔 想 飲" tabindex="0">我 唔 想 飲</div>
+                        <div class="sentence" data-sentence="我 想 飲 暖 水" tabindex="0">我 想 飲 暖 水</div>
+                        <div class="sentence" data-sentence="我 想 飲 凍 水" tabindex="0">我 想 飲 凍 水</div>
+                        <div class="sentence" data-sentence="幫我 抹 口" tabindex="0">幫我 抹 口</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">個人護理</div>
+                    <div class="sentence-grid">
+                        <div class="sentence" data-sentence="我 想 去 廁所" tabindex="0">我 想 去 廁所</div>
+                        <div class="sentence" data-sentence="幫我 換 尿片" tabindex="0">幫我 換 尿片</div>
+                        <div class="sentence" data-sentence="幫我 洗澡" tabindex="0">幫我 洗澡</div>
+                        <div class="sentence" data-sentence="幫我 換 衫" tabindex="0">幫我 換 衫</div>
+                        <div class="sentence" data-sentence="幫我 擦身" tabindex="0">幫我 擦身</div>
+                        <div class="sentence" data-sentence="幫我 轉身" tabindex="0">幫我 轉身</div>
+                        <div class="sentence" data-sentence="幫我 整 頭髮" tabindex="0">幫我 整 頭髮</div>
+                        <div class="sentence" data-sentence="幫我 搽 潤唇膏" tabindex="0">幫我 搽 潤唇膏</div>
+                        <div class="sentence" data-sentence="幫我 吸 痰" tabindex="0">幫我 吸 痰</div>
+                        <div class="sentence" data-sentence="幫我 清理 喉管" tabindex="0">幫我 清理 喉管</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">環境調整</div>
+                    <div class="sentence-grid">
+                        <div class="sentence" data-sentence="開 冷氣" tabindex="0">開 冷氣</div>
+                        <div class="sentence" data-sentence="關 冷氣" tabindex="0">關 冷氣</div>
+                        <div class="sentence" data-sentence="開 風扇" tabindex="0">開 風扇</div>
+                        <div class="sentence" data-sentence="關 風扇" tabindex="0">關 風扇</div>
+                        <div class="sentence" data-sentence="幫我 蓋 被" tabindex="0">幫我 蓋 被</div>
+                        <div class="sentence" data-sentence="除 被" tabindex="0">除 被</div>
+                        <div class="sentence" data-sentence="開 窗" tabindex="0">開 窗</div>
+                        <div class="sentence" data-sentence="關 窗" tabindex="0">關 窗</div>
+                        <div class="sentence" data-sentence="光線 太 強" tabindex="0">光線 太 強</div>
+                        <div class="sentence" data-sentence="光線 太 暗" tabindex="0">光線 太 暗</div>
+                        <div class="sentence" data-sentence="房間 好 靜" tabindex="0">房間 好 靜</div>
+                        <div class="sentence" data-sentence="幫我 開 收音機" tabindex="0">幫我 開 收音機</div>
+                        <div class="sentence" data-sentence="幫我 關 收音機" tabindex="0">幫我 關 收音機</div>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-title">健康/緊急</div>
+                    <div class="sentence-grid">
+                        <div class="sentence" data-sentence="我 好 痛" tabindex="0">我 好 痛</div>
+                        <div class="sentence" data-sentence="頭 痛" tabindex="0">頭 痛</div>
+                        <div class="sentence" data-sentence="肚 痛" tabindex="0">肚 痛</div>
+                        <div class="sentence" data-sentence="腳 痛" tabindex="0">腳 痛</div>
+                        <div class="sentence" data-sentence="幫我 搵 醫生" tabindex="0">幫我 搵 醫生</div>
+                        <div class="sentence" data-sentence="我 要 食 藥" tabindex="0">我 要 食 藥</div>
+                        <div class="sentence" data-sentence="我 喘 氣" tabindex="0">我 喘 氣</div>
+                        <div class="sentence" data-sentence="我 好 驚" tabindex="0">我 好 驚</div>
+                        <div class="sentence" data-sentence="喉管 好 痛" tabindex="0">喉管 好 痛</div>
+                        <div class="sentence" data-sentence="胃 好 脹" tabindex="0">胃 好 脹</div>
+                        <div class="sentence" data-sentence="幫我 按摩 腳" tabindex="0">幫我 按摩 腳</div>
+                        <div class="sentence" data-sentence="幫我 檢查 喉管" tabindex="0">幫我 檢查 喉管</div>
+                    </div>
+                </div>
+            </div>
+            <div id="right-buttons">
+                <div class="button" data-action="top" tabindex="0">回最頂</div>
+                <div class="button" data-action="delete" tabindex="0">刪除</div>
+                <div class="button" data-action="clear" tabindex="0">清空</div>
+                <div class="button" data-action="speak" tabindex="0">朗讀</div>
+                <div class="button" data-action="home" tabindex="0">返回主頁</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let sentence = [];
+        let currentIndex = 0;
+        let isRightButtons = false;
+        let lastWordIndex = 0;
+        let currentPage = 'home';
+
+        const homePage = document.getElementById("home-page");
+        const wordPage = document.getElementById("word-page");
+        const sentencePage = document.getElementById("sentence-page");
+        const homeButtons = document.querySelectorAll(".home-button");
+        const wordButtons = wordPage.querySelectorAll(".button");
+        const sentenceButtons = sentencePage.querySelectorAll(".button");
+        const words = wordPage.querySelectorAll(".word");
+        const sentences = sentencePage.querySelectorAll(".sentence");
+        const wordArea = document.getElementById("word-area");
+        const sentenceArea = document.getElementById("sentence-area");
+
+        const wordCategories = [
+            { start: 0, count: 15 }, // 常用動詞
+            { start: 15, count: 9 }, // 主體
+            { start: 24, count: 7 }, // 助語詞
+            { start: 31, count: 9 }, // 床位調整
+            { start: 40, count: 12 }, // 身體部位
+            { start: 52, count: 15 }, // 感覺
+            { start: 67, count: 9 }, // 基本需求
+            { start: 76, count: 10 }, // 個人護理
+            { start: 86, count: 10 }, // 環境調整
+            { start: 96, count: 12 }, // 健康/緊急
+            { start: 108, count: 13 }, // 數字
+            { start: 121, count: 10 }, // 時間
+            { start: 131, count: 14 } // 問候/感謝
+        ];
+
+        const sentenceCategories = [
+            { start: 0, count: 9 }, // 問候/感謝
+            { start: 9, count: 9 }, // 床位調整
+            { start: 18, count: 14 }, // 身體狀況/感覺
+            { start: 32, count: 9 }, // 基本需求
+            { start: 41, count: 10 }, // 個人護理
+            { start: 51, count: 13 }, // 環境調整
+            { start: 64, count: 12 } // 健康/緊急
+        ];
+
+        function updateSentenceBox() {
+            const activeBox = currentPage === 'word' ? wordPage.querySelector("#sentence-box") : sentencePage.querySelector("#sentence-box");
+            if (activeBox) {
+                activeBox.textContent = sentence.join(" ");
+            }
+        }
+
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-HK';
+            utterance.rate = 1;
+            utterance.volume = 1;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function switchPage(page) {
+            homePage.classList.remove("active");
+            wordPage.classList.remove("active");
+            sentencePage.classList.remove("active");
+            sentence = [];
+            currentIndex = 0;
+            lastWordIndex = 0;
+            isRightButtons = false;
+            currentPage = page;
+
+            homeButtons.forEach(item => item.classList.remove("selected"));
+            wordButtons.forEach(item => item.classList.remove("selected"));
+            sentenceButtons.forEach(item => item.classList.remove("selected"));
+            words.forEach(item => item.classList.remove("selected"));
+            sentences.forEach(item => item.classList.remove("selected"));
+
+            if (page === 'home') {
+                homePage.classList.add("active");
+                selectItem(0, homeButtons, null);
+            } else if (page === 'word') {
+                wordPage.classList.add("active");
+                selectItem(0, [...words, ...wordButtons], wordArea);
+            } else if (page === 'sentence') {
+                sentencePage.classList.add("active");
+                selectItem(0, [...sentences, ...sentenceButtons], sentenceArea);
+            }
+            updateSentenceBox();
+        }
+
+        function selectItem(index, selectable, scrollArea) {
+            selectable.forEach(item => item.classList.remove("selected"));
+            selectable[index].classList.add("selected");
+            selectable[index].focus();
+            currentIndex = index;
+            isRightButtons = index >= (currentPage === 'word' ? words.length : sentences.length);
+
+            if (!isRightButtons) {
+                lastWordIndex = index;
+            }
+
+            if (!isRightButtons && scrollArea) {
+                const selectedItem = selectable[index];
+                const itemRect = selectedItem.getBoundingClientRect();
+                const areaRect = scrollArea.getBoundingClientRect();
+                if (itemRect.bottom > areaRect.bottom) {
+                    scrollArea.scrollTop += itemRect.bottom - areaRect.bottom + 10;
+                } else if (itemRect.top < areaRect.top) {
+                    scrollArea.scrollTop -= areaRect.top - itemRect.top + 10;
+                }
+            }
+        }
+
+        function handleSelection(item) {
+            if (item.classList.contains("home-button")) {
+                switchPage(item.dataset.page);
+            } else if (item.classList.contains("button")) {
+                const action = item.dataset.action;
+                if (action === "top") {
+                    lastWordIndex = 0;
+                    selectItem(0, currentPage === 'word' ? [...words, ...wordButtons] : [...sentences, ...sentenceButtons], currentPage === 'word' ? wordArea : sentenceArea);
+                    if (currentPage === 'word') wordArea.scrollTop = 0;
+                    else sentenceArea.scrollTop = 0;
+                } else if (action === "delete") {
+                    sentence.pop();
+                    updateSentenceBox();
+                } else if (action === "clear") {
+                    sentence = [];
+                    updateSentenceBox();
+                } else if (action === "speak") {
+                    const text = sentence.join(" ");
+                    if (text) speakText(text);
+                } else if (action === "home") {
+                    switchPage('home');
+                }
+            } else if (item.classList.contains("word")) {
+                sentence.push(item.dataset.word);
+                updateSentenceBox();
+            } else if (item.classList.contains("sentence")) {
+                sentence = [item.dataset.sentence];
+                updateSentenceBox();
+            }
+        }
+
+        homeButtons.forEach((item, index) => {
+            item.addEventListener("click", () => {
+                handleSelection(item);
+            });
+        });
+
+        wordButtons.forEach((item, index) => {
+            item.addEventListener("click", () => {
+                handleSelection(item);
+                selectItem(index + words.length, [...words, ...wordButtons], wordArea);
+            });
+        });
+
+        sentenceButtons.forEach((item, index) => {
+            item.addEventListener("click", () => {
+                handleSelection(item);
+                selectItem(index + sentences.length, [...sentences, ...sentenceButtons], sentenceArea);
+            });
+        });
+
+        words.forEach((item, index) => {
+            item.addEventListener("click", () => {
+                handleSelection(item);
+                selectItem(index, [...words, ...wordButtons], wordArea);
+            });
+        });
+
+        sentences.forEach((item, index) => {
+            item.addEventListener("click", () => {
+                handleSelection(item);
+                selectItem(index, [...sentences, ...sentenceButtons], sentenceArea);
+            });
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (currentPage === 'home') {
+                const selectable = homeButtons;
+                if (event.key === "ArrowLeft" && currentIndex > 0) {
+                    selectItem(currentIndex - 1, selectable, null);
+                } else if (event.key === "ArrowRight" && currentIndex < selectable.length - 1) {
+                    selectItem(currentIndex + 1, selectable, null);
+                } else if (event.key === "Enter") {
+                    handleSelection(selectable[currentIndex]);
+                }
+            } else {
+                const selectable = currentPage === 'word' ? [...words, ...wordButtons] : [...sentences, ...sentenceButtons];
+                const categories = currentPage === 'word' ? wordCategories : sentenceCategories;
+                const itemCount = currentPage === 'word' ? words.length : sentences.length;
+                const scrollArea = currentPage === 'word' ? wordArea : sentenceArea;
+
+                if (!isRightButtons) {
+                    const category = categories.find(cat => currentIndex >= cat.start && currentIndex < cat.start + cat.count);
+                    const catIndex = currentIndex - category.start;
+                    const catRow = Math.floor(catIndex / 5);
+                    const catCol = catIndex % 5;
+                    const catRows = Math.ceil(category.count / 5);
+
+                    if (event.key === "ArrowLeft") {
+                        if (catCol > 0) {
+                            selectItem(currentIndex - 1, selectable, scrollArea);
+                        }
+                    } else if (event.key === "ArrowRight") {
+                        if (catCol === 4 || currentIndex === category.start + category.count - 1) {
+                            selectItem(itemCount, selectable, scrollArea);
+                        } else {
+                            selectItem(currentIndex + 1, selectable, scrollArea);
+                        }
+                    } else if (event.key === "ArrowUp") {
+                        if (catRow === 0) {
+                            const prevCat = categories[categories.indexOf(category) - 1];
+                            if (prevCat) {
+                                const prevCatRows = Math.ceil(prevCat.count / 5);
+                                const prevRow = prevCatRows - 1;
+                                const prevCol = Math.min(catCol, prevCat.count - 1 - prevRow * 5);
+                                selectItem(prevCat.start + prevRow * 5 + prevCol, selectable, scrollArea);
+                            }
+                        } else {
+                            selectItem(currentIndex - 5, selectable, scrollArea);
+                        }
+                    } else if (event.key === "ArrowDown") {
+                        if (catRow < catRows - 1) {
+                            const nextIndex = currentIndex + 5;
+                            if (nextIndex < category.start + category.count) {
+                                selectItem(nextIndex, selectable, scrollArea);
+                            } else {
+                                selectItem(category.start + category.count - 1, selectable, scrollArea);
+                            }
+                        } else {
+                            const nextCat = categories[categories.indexOf(category) + 1];
+                            if (nextCat) {
+                                const nextCol = Math.min(catCol, nextCat.count - 1);
+                                selectItem(nextCat.start + nextCol, selectable, scrollArea);
+                            }
+                        }
+                    } else if (event.key === "Enter") {
+                        handleSelection(selectable[currentIndex]);
+                    }
+                } else {
+                    if (event.key === "ArrowLeft") {
+                        selectItem(lastWordIndex, selectable, scrollArea);
+                    } else if (event.key === "ArrowUp") {
+                        if (currentIndex > itemCount) {
+                            selectItem(currentIndex - 1, selectable, scrollArea);
+                        }
+                    } else if (event.key === "ArrowDown") {
+                        if (currentIndex < selectable.length - 1) {
+                            selectItem(currentIndex + 1, selectable, scrollArea);
+                        }
+                    } else if (event.key === "Enter") {
+                        handleSelection(selectable[currentIndex]);
+                    }
+                }
+            }
+        });
+
+        switchPage('home');
+    </script>
+</body>
+</html>
